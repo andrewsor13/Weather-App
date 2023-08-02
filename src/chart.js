@@ -155,6 +155,14 @@ async function generateWeatherChart() {
             ticks: {
               color: 'rgb(100, 100, 100)',
             },
+            title: {
+              display: true,
+              text: 'Date[mm/dd/yyyy]',
+              color: 'rgb(100, 100, 100)',
+              font: {
+                size: 18,
+              },
+            },
           },
           y: {
             beginAtZero: true,
@@ -163,6 +171,14 @@ async function generateWeatherChart() {
             },
             ticks: {
               color: 'rgb(100, 100, 100)',
+            },
+            title: {
+              display: true,
+              text: 'Value of Indicators',
+              color: 'rgb(100, 100, 100)',
+              font: {
+                size: 18,
+              },
             },
           },
         },
