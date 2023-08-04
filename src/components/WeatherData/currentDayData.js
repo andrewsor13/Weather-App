@@ -277,23 +277,11 @@ async function submitForm(event) {
     });
     return;
   }
-  // //    afisare oras ales + functie modificare background cu orasul ales - in caz ca nu exista poze sa se afiseze peisaje cu cerul??
-  //     // daca este accesat butonul today  - accesare functie pt today
-  //     // daca este accesat butonul fivedays - accesare functie five days
-  //  stergere eveniment la o noua cautare
 
-  try {
-    if (cityClockUpdater) {
-      stopCityClockUpdate();
-    }
-    weatherData.city = searchInput.value;
-    getCityBackground(searchInput.value);
-    await getWeatherForSearchedCity();
-    stopClockUpdate();
-    startCityClockUpdate();
-  } catch (err) {
-    console.error(`Error: Couldn't get data.`);
-  }
+  weatherData.city = searchInput.value;
+  getCityBackground(searchInput.value);
+  getWeatherForSearchedCity();
+  // event.currentTarget.reset();
 }
 
 function getCityBackground(cityName) {
@@ -301,70 +289,31 @@ function getCityBackground(cityName) {
   const KEY = '&key=38046505-5b9e748b87046ce765cd21b85';
   const requestParameters = `?image_type=photo&category=travel&orientation=horizontal&q=${cityName}&page=1&per_page=40`;
   const bg = document.querySelector('.backgroundImage');
+
   fetch(URL + requestParameters + KEY, {
     method: 'GET',
   })
     .then(res => res.json())
     .then(image => {
       console.log(image);
-      const randomImg = Math.floor(Math.random() * image.hits.length);
-      const img = image.hits[randomImg].largeImageURL;
-      bg.style.backgroundImage = `url(${img})`;
+      if (image.hits && image.hits.length > 0) {
+        const randomImg = Math.floor(Math.random() * image.hits.length);
+        const img = image.hits[randomImg].largeImageURL;
+        bg.style.backgroundImage = `url(${img})`;
+      } else {
+        const requestParameters = `?image_type=photo&category=buildings&orientation=horizontal&q=&page=1&per_page=40`;
+        fetch(URL + requestParameters + KEY, {
+          method: 'GET',
+        })
+          .then(res => res.json())
+          .then(image => {
+            const randomImg = Math.floor(Math.random() * image.hits.length);
+            const img = image.hits[randomImg].largeImageURL;
+            bg.style.backgroundImage = `url(${img})`;
+          });
+      }
+    })
+    .catch(error => {
+      console.error('Error fetching background:', error);
     });
-}
-
-// Funcția care afla ora corespunzătoare fusului orar al orașului căutat
-function updateClockWithTimeZone() {
-  const currentTime = new Date();
-  let localTimeToGMT = weatherData.locationTimezone / 3600;
-  let searchedCityToGMT = weatherData.timezone / 3600;
-  let hours = currentTime.getHours();
-  let timeDifference = 0;
-  if (localTimeToGMT > searchedCityToGMT) {
-    if (localTimeToGMT >= 0) {
-      if (searchedCityToGMT >= 0) {
-        timeDifference = (localTimeToGMT - searchedCityToGMT) * -1;
-      } else if (searchedCityToGMT < 0) {
-        searchedCityToGMT *= -1;
-        timeDifference = (localTimeToGMT + searchedCityToGMT) * -1;
-      }
-    } else if (localTimeToGMT < 0) {
-      if (searchedCityToGMT < 0) {
-        searchedCityToGMT *= -1;
-        localTimeToGMT *= -1;
-        timeDifference = (localTimeToGMT - searchedCityToGMT) * -1;
-      }
-    }
-  } else if (searchedCityToGMT > localTimeToGMT) {
-    if (localTimeToGMT >= 0) {
-      timeDifference = searchedCityToGMT - localTimeToGMT;
-    } else if (localTimeToGMT < 0) {
-      localTimeToGMT *= -1;
-      timeDifference = searchedCityToGMT + localTimeToGMT;
-    }
-  }
-
-  if (timeDifference >= 0) {
-    if (hours + timeDifference >= 24) {
-      hours = timeDifference - (24 - hours);
-    } else {
-      hours += timeDifference;
-    }
-  } else if (timeDifference < 0) {
-    if (hours + timeDifference < 0) {
-      timeDifference *= -1;
-      hours = 24 - (timeDifference - hours);
-    } else {
-      timeDifference *= -1;
-      hours -= timeDifference;
-    }
-  }
-  const formattedHour = String(hours).padStart(2, '0');
-  const formattedMin = String(currentTime.getMinutes()).padStart(2, '0');
-  const formattedSec = String(currentTime.getSeconds()).padStart(2, '0');
-
-  // Actualizăm elementul HTML care afișează ora curentă
-  const clockElement = document.querySelector('.time__hour');
-  clockElement.textContent = `${formattedHour}:${formattedMin}:${formattedSec}`;
-  console.log(`${formattedHour}:${formattedMin}:${formattedSec}`);
 }
