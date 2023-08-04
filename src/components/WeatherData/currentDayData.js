@@ -380,5 +380,4 @@ function updateClockWithTimeZone() {
   // Actualizăm elementul HTML care afișează ora curentă
   const clockElement = document.querySelector('.time__hour');
   clockElement.textContent = `${formattedHour}:${formattedMin}:${formattedSec}`;
-  console.log(`${formattedHour}:${formattedMin}:${formattedSec}`);
 }
