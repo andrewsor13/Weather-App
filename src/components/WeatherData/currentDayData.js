@@ -268,8 +268,10 @@ const searchInput = document.querySelector('#search-input');
 
 searchForm.addEventListener('submit', submitForm);
 
-async function submitForm(event) {
-  event.preventDefault();
+export async function submitForm(event) {
+  if (event) {
+    event.preventDefault();
+  }
 
   if (searchInput.value === '') {
     Notify.info('Enter the city name, please!', {

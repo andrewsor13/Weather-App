@@ -18,6 +18,7 @@ const cardsList = document.querySelector('.days-cards');
 const sectionTitle = document.querySelector('.five-days-section__title');
 const moreInfoContainer = document.querySelector('.more-info-container');
 const fiveDaysSectionContainer = document.querySelector('.five-days-section');
+
 const APIKEY = '072ec51636e5141423703ba32d12100f';
 const urlForFiveDaysWeather = (lat, lon) => {
   return `https://api.openweathermap.org/data/2.5/forecast/?lat=${lat}&lon=${lon}&appid=${APIKEY}&units=metric&lang=en`;
@@ -103,18 +104,24 @@ const getMoreInfoDataForSearchedCity = async () => {
 cardsList.addEventListener('click', event => {
   if (event.target.classList.contains('card__button')) {
     const clickedDay = event.target.value;
-
+    const cards = document.querySelectorAll(".card");
+    cards.forEach(element => {
+      element.classList.remove("selected")
+    })
+    event.target.parentElement.classList.add('selected');
     if (
       moreInfoCards.classList.contains('hidden') ||
       selectedDay !== clickedDay
     ) {
       selectedDay = clickedDay;
       moreInfoCards.classList.remove('hidden');
+        
       fiveDaysSectionContainer.style.marginBottom = '400px';
       getMoreInfoData().catch(err => {
         console.log(err);
       });
     } else {
+      event.target.parentElement.classList.remove('selected');
       moreInfoCards.classList.add('hidden');
       fiveDaysSectionContainer.style.marginBottom = '0px';
     }

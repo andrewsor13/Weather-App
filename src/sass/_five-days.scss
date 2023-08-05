@@ -14,6 +14,7 @@
     font-size: $font-size-18;
     font-weight: $font-weight-700;
     padding-top: 32px;
+    text-transform: capitalize;
   }
 }
 
@@ -23,6 +24,7 @@
   align-items: center;
   overflow: hidden;
   margin-left: 7px;
+  gap: 10px;
 }
 .days-cards {
   display: flex;
@@ -31,13 +33,25 @@
   align-self: baseline;
   padding-left: 21px;
   transition: all 1s ease-in-out;
-}
+ }
+
 .card {
   width: 65px;
   display: flex;
   flex-direction: column;
   align-items: center;
 
+  &:focus,
+  &:hover,
+  &:active,
+  &.selected {
+    cursor: pointer;
+    background: #ffffff1a;
+    border-radius: 25px;
+  }
+
+  
+  
   &__name {
     color: $main-text-color;
     text-align: center;
