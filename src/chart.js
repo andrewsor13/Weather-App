@@ -1,5 +1,3 @@
-const searchInput = document.querySelector('#search-input');
-
 async function getWeatherData() {
   const API_KEY = '072ec51636e5141423703ba32d12100f';
   const city = 'Bucharest';
@@ -142,11 +140,10 @@ async function getAtmosphereData() {
 // Functia de generare CHART
 
 async function generateWeatherChart() {
-  const city = searchInput.value;
-  const weatherData = await getWeatherData(city);
-  const humidityData = await getHumidityData(city);
-  const windData = await getWindData(city);
-  const atmosphereData = await getAtmosphereData(city);
+  const weatherData = await getWeatherData();
+  const humidityData = await getHumidityData();
+  const windData = await getWindData();
+  const atmosphereData = await getAtmosphereData();
   if (weatherData) {
     const ctx = document.getElementById('myChart').getContext('2d');
     const chartFont = () => {
@@ -230,6 +227,10 @@ async function generateWeatherChart() {
         },
       },
     });
+    const chartContainer = document.querySelector('.chart-container');
+    chartContainer.classList.add('hidden');
+
+    localStorage.setItem('chartContainerActivated', 'false');
   }
 }
 
@@ -241,19 +242,20 @@ window.addEventListener('resize', () => {
 
 generateWeatherChart();
 
+//Evenimente pentru functionalitatile graficului
+
 const chartCanvas = document.getElementById('myChart');
 const toggleButton = document.getElementById('chartButton');
 
 window.addEventListener('load', function () {
-  const buttonState = localStorage.getItem('buttonState');
-  if (buttonState) {
-    if (buttonState === 'visible') {
-      chartCanvas.style.display = 'block';
-      toggleButton.innerText = 'Hide Details';
-    } else {
-      chartCanvas.style.display = 'none';
-      toggleButton.innerText = 'Show';
-    }
+  const chartState = localStorage.getItem('chartContainerActivated');
+
+  if (chartState === 'true') {
+    chartCanvas.style.display = 'block';
+    toggleButton.innerText = 'Hide Details';
+  } else {
+    chartCanvas.style.display = 'none';
+    toggleButton.innerText = 'Show';
   }
 });
 
@@ -262,30 +264,35 @@ toggleButton.addEventListener('click', function (event) {
   if (chartCanvas.style.display === 'none') {
     chartCanvas.style.display = 'block';
     toggleButton.innerText = 'Hide Details';
-    localStorage.setItem('buttonState', 'visible');
+    localStorage.setItem('chartContainerActivated', 'true');
   } else {
     chartCanvas.style.display = 'none';
     toggleButton.innerText = 'Show';
-    localStorage.setItem('buttonState', 'hidden');
+    localStorage.setItem('chartContainerActivated', 'false');
   }
 });
 
+chartCanvas.style.display = 'none';
+
+// Aparitia si Disparitia graficului in functie de pagina din browser
+
 function activateChartContainer() {
-  var chartContainer = document.querySelector('.chart-container.hidden');
+  var chartContainer = document.querySelector('.chart-container');
 
   if (chartContainer) {
     chartContainer.classList.remove('hidden');
     localStorage.setItem('chartContainerActivated', 'true');
+
+    var toggleButton = document.getElementById('chartButton');
+    toggleButton.innerText = 'Hide Details';
   }
 }
-
-// Aparitia si Disparitia graficului in functie de pagina
 
 var activateButton = document.getElementById('5-days-button');
 activateButton.addEventListener('click', activateChartContainer);
 
 function deactivateChartContainer() {
-  var chartContainer = document.querySelector('.chart-container.hidden');
+  var chartContainer = document.querySelector('.chart-container');
 
   if (chartContainer) {
     chartContainer.classList.add('hidden');

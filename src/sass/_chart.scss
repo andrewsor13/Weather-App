@@ -79,6 +79,7 @@ $speed: 0.5s;
   text-transform: uppercase;
 
   &:hover {
+    cursor: pointer;
     &:after {
       opacity: 1;
       transform: translateY(0) rotateX(0);
