@@ -266,3 +266,29 @@ toggleButton.addEventListener('click', function (event) {
     localStorage.setItem('buttonState', 'hidden');
   }
 });
+
+function activateChartContainer() {
+  var chartContainer = document.querySelector('.chart-container.hidden');
+
+  if (chartContainer) {
+    chartContainer.classList.remove('hidden');
+    localStorage.setItem('chartContainerActivated', 'true');
+  }
+}
+
+// Aparitia si Disparitia graficului in functie de pagina
+
+var activateButton = document.getElementById('5-days-button');
+activateButton.addEventListener('click', activateChartContainer);
+
+function deactivateChartContainer() {
+  var chartContainer = document.querySelector('.chart-container.hidden');
+
+  if (chartContainer) {
+    chartContainer.classList.add('hidden');
+    localStorage.setItem('chartContainerDeactivated', 'true');
+  }
+}
+
+var deactivateButton = document.getElementById('today-button');
+deactivateButton.addEventListener('click', deactivateChartContainer);
