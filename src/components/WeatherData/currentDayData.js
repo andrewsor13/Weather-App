@@ -301,6 +301,7 @@ function getCityBackground(cityName) {
   const requestParameters = `?image_type=photo&category=travel&orientation=horizontal&q=${cityName}&page=1&per_page=40`;
   const bg = document.querySelector('.backgroundImage');
 
+  
   fetch(URL + requestParameters + KEY, {
     method: 'GET',
   })
