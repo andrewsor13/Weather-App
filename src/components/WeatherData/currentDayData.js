@@ -248,8 +248,8 @@ function renderWeatherDataForToday() {
 
 async function getWeather() {
   await getCurrentLocationCoord();
-  await getCityBackground(weatherData.city);
   const data = await getWeatherForToday();
+  await getCityBackground(weatherData.city);
   startClockUpdate();
   renderWeatherDataForToday();
 }
