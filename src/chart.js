@@ -1,3 +1,5 @@
+const searchInput = document.querySelector('#search-input');
+
 async function getWeatherData() {
   const API_KEY = '072ec51636e5141423703ba32d12100f';
   const city = 'Bucharest';
@@ -140,10 +142,11 @@ async function getAtmosphereData() {
 // Functia de generare CHART
 
 async function generateWeatherChart() {
-  const weatherData = await getWeatherData();
-  const humidityData = await getHumidityData();
-  const windData = await getWindData();
-  const atmosphereData = await getAtmosphereData();
+  const city = searchInput.value;
+  const weatherData = await getWeatherData(city);
+  const humidityData = await getHumidityData(city);
+  const windData = await getWindData(city);
+  const atmosphereData = await getAtmosphereData(city);
   if (weatherData) {
     const ctx = document.getElementById('myChart').getContext('2d');
     const chartFont = () => {
