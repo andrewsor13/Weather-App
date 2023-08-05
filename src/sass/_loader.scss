@@ -1,58 +1,83 @@
-@import '~compass-mixins/lib/compass/css3';
-
-body {
-  background: #efefef;
-}
-
-.content {
+ 
+.is-hidden {
   display: none;
 }
 
 /* Stiluri preloader */
-.preloader {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  height: 110px;
-  width: 110px;
+body {
+  background: #efefef;
 }
 
-.preloader svg {
+.preloader {
+	position: absolute;
+	margin-left: -55px;
+	margin-top: -100px;
+	height: 110px;
+	width: 110px;
+	left: 50%;
+	top: 50%;
+
+
+svg {
+  width: 110px;
+  height: 110px;
+}
+
+#loaderSun path {
+  stroke: #9ea1a4;
+  stroke-width: 0.25;
+  fill: #241E20;
+}
+
+#loaderCloud {
+  position: relative;
+  z-index: 2;
+}
+
+#loaderCloud path {
+  fill: #efefef;
+}
+
+#loaderSun {
+  margin-left: -10px;
+  margin-top: 6px;
+  opacity: 0;
   width: 60px;
   height: 60px;
-  opacity: 0;
   position: absolute;
-  top: 15px;
   left: 45px;
+  top: 15px;
   z-index: 1;
+  
   animation-name: rotate;
   animation-duration: 16000ms;
   animation-iteration-count: infinite;
   animation-timing-function: linear;
 }
 
-.preloader path {
-  stroke: #9ea1a4;
+#loaderSun path {
   stroke-width: 0.18;
   fill: #9ea1a4;
 }
 
-.cloud svg {
-  position: relative;
-  z-index: 2;
+
+@keyframes rotate {
+  0% {
+    transform: rotateZ(0deg);
+  }
+
+  100% {
+    transform: rotateZ(360deg);
+  }
 }
 
-.cloud path {
-  fill: #efefef;
-}
-
-.rain {
+/* Rain */
+.loaderRain {
   position: absolute;
   width: 70px;
   height: 70px;
-  top: 38px;
-  left: 19px;
+  margin-top: -32px;
+  margin-left: 19px;
 }
 
 .drop {
@@ -64,6 +89,7 @@ body {
   height: 10px;
   margin-left: 4px;
   border-radius: 0px 0px 6px 6px;
+  
   animation-name: drop;
   animation-duration: 350ms;
   animation-iteration-count: infinite;
@@ -109,15 +135,6 @@ body {
   animation-delay: -1300ms;
 }
 
-@keyframes rotate {
-  0% {
-    transform: rotateZ(0deg);
-  }
-
-  100% {
-    transform: rotateZ(360deg);
-  }
-}
 
 @keyframes drop {
   50% {
@@ -136,13 +153,13 @@ body {
 }
 
 .text {
-  font-family: Helvetica, 'Helvetica Neue', sans-serif;
-  letter-spacing: 1px;
-  text-align: center;
-  font-weight: bold;
-  font-size: 11px;
-  color: #a0a0a0;
-  margin-top: 20px;
-  width: 200px;
-}
-
+	font-family: Helvetica, 'Helvetica Neue', sans-serif;
+	letter-spacing: 1px;
+	text-align: center;
+	margin-left: -43px;
+	font-weight: bold;
+	margin-top: 20px;
+	font-size: 11px;
+	color: #a0a0a0;
+	width: 200px;
+}}
