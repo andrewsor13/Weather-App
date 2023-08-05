@@ -1,5 +1,4 @@
 'use strict';
-const { zonedTimeToUtc, format } = require('date-fns-tz');
 import {
   sunriseSvg,
   sunsetSvg,
@@ -249,6 +248,7 @@ function renderWeatherDataForToday() {
 
 async function getWeather() {
   await getCurrentLocationCoord();
+  await getCityBackground(weatherData.city);
   const data = await getWeatherForToday();
   startClockUpdate();
   renderWeatherDataForToday();

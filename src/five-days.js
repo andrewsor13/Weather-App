@@ -17,7 +17,7 @@ const moreInfoCards = document.querySelector('.more-info-container');
 const cardsList = document.querySelector('.days-cards');
 const sectionTitle = document.querySelector('.five-days-section__title');
 const moreInfoContainer = document.querySelector('.more-info-container');
-
+const fiveDaysSectionContainer = document.querySelector('.five-days-section');
 const APIKEY = '072ec51636e5141423703ba32d12100f';
 const urlForFiveDaysWeather = (lat, lon) => {
   return `https://api.openweathermap.org/data/2.5/forecast/?lat=${lat}&lon=${lon}&appid=${APIKEY}&units=metric&lang=en`;
@@ -110,15 +110,16 @@ cardsList.addEventListener('click', event => {
     ) {
       selectedDay = clickedDay;
       moreInfoCards.classList.remove('hidden');
+      fiveDaysSectionContainer.style.marginBottom = '400px';
       getMoreInfoData().catch(err => {
         console.log(err);
       });
     } else {
       moreInfoCards.classList.add('hidden');
+      fiveDaysSectionContainer.style.marginBottom = '0px';
     }
   }
 });
-
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 const searchForm = document.querySelector('#search-form');
