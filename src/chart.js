@@ -1,5 +1,5 @@
 async function getWeatherData() {
-  const API_KEY = 'eeffed10f27ca7ccae26c84b46ee1ea8';
+  const API_KEY = '072ec51636e5141423703ba32d12100f';
   const city = 'Bucharest';
 
   //Utilizare temperatura
@@ -10,11 +10,22 @@ async function getWeatherData() {
     );
 
     const weatherData = response.data.list
-      .slice(0, 8)
+      .slice(0, 5)
       .map(item => item.main.temp);
-    const labels = response.data.list
-      .slice(0, 8)
-      .map(item => new Date(item.dt * 1000).toLocaleDateString());
+
+    // selectia datelor calendaristice
+
+    const labels = response.data.list.slice(0, 5).map(item => {
+      const date = new Date(item.dt * 1000);
+      const day = date.getDate().toString().padStart(2, '0');
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const year = date.getFullYear();
+      const hours = date.getHours();
+      const minutes = date.getMinutes();
+      return `${day}/${month}/${year} ${hours}:${
+        minutes < 10 ? '0' : ''
+      }${minutes}`;
+    });
 
     return { weatherData, labels };
   } catch (error) {
@@ -26,7 +37,7 @@ async function getWeatherData() {
 //Utilizare umiditate
 
 async function getHumidityData() {
-  const API_KEY = 'eeffed10f27ca7ccae26c84b46ee1ea8';
+  const API_KEY = '072ec51636e5141423703ba32d12100f';
   const city = 'Bucharest';
 
   try {
@@ -35,11 +46,19 @@ async function getHumidityData() {
     );
 
     const humidityData = response.data.list
-      .slice(0, 8)
+      .slice(0, 5)
       .map(item => item.main.humidity);
-    const labels = response.data.list
-      .slice(0, 8)
-      .map(item => new Date(item.dt * 1000).toLocaleDateString());
+    const labels = response.data.list.slice(0, 5).map(item => {
+      const date = new Date(item.dt * 1000);
+      const day = date.getDate().toString().padStart(2, '0');
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const year = date.getFullYear();
+      const hours = date.getHours();
+      const minutes = date.getMinutes();
+      return `${day}/${month}/${year} ${hours}:${
+        minutes < 10 ? '0' : ''
+      }${minutes}`;
+    });
 
     return { humidityData, labels };
   } catch (error) {
@@ -51,7 +70,7 @@ async function getHumidityData() {
 //Utilizare viteza vantului
 
 async function getWindData() {
-  const API_KEY = 'eeffed10f27ca7ccae26c84b46ee1ea8';
+  const API_KEY = '072ec51636e5141423703ba32d12100f';
   const city = 'Bucharest';
 
   try {
@@ -60,11 +79,19 @@ async function getWindData() {
     );
 
     const windData = response.data.list
-      .slice(0, 8)
+      .slice(0, 5)
       .map(item => item.wind.speed);
-    const labels = response.data.list
-      .slice(0, 8)
-      .map(item => new Date(item.dt * 1000).toLocaleDateString());
+    const labels = response.data.list.slice(0, 5).map(item => {
+      const date = new Date(item.dt * 1000);
+      const day = date.getDate().toString().padStart(2, '0');
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const year = date.getFullYear();
+      const hours = date.getHours();
+      const minutes = date.getMinutes();
+      return `${day}/${month}/${year} ${hours}:${
+        minutes < 10 ? '0' : ''
+      }${minutes}`;
+    });
 
     return { windData, labels };
   } catch (error) {
@@ -76,7 +103,7 @@ async function getWindData() {
 //Utilizare atmosferei
 
 async function getAtmosphereData() {
-  const API_KEY = 'eeffed10f27ca7ccae26c84b46ee1ea8';
+  const API_KEY = '072ec51636e5141423703ba32d12100f';
   const city = 'Bucharest';
 
   try {
@@ -85,11 +112,20 @@ async function getAtmosphereData() {
     );
 
     const atmosphereData = response.data.list
-      .slice(0, 8)
+      .slice(0, 5)
       .map(item => item.main.pressure);
-    const labels = response.data.list
-      .slice(0, 8)
-      .map(item => new Date(item.dt * 1000).toLocaleDateString());
+
+    const labels = response.data.list.slice(0, 5).map(item => {
+      const date = new Date(item.dt * 1000);
+      const day = date.getDate().toString().padStart(2, '0');
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const year = date.getFullYear();
+      const hours = date.getHours();
+      const minutes = date.getMinutes();
+      return `${day}/${month}/${year} ${hours}:${
+        minutes < 10 ? '0' : ''
+      }${minutes}`;
+    });
 
     return { atmosphereData, labels };
   } catch (error) {
@@ -110,6 +146,13 @@ async function generateWeatherChart() {
   const atmosphereData = await getAtmosphereData();
   if (weatherData) {
     const ctx = document.getElementById('myChart').getContext('2d');
+    const chartFont = () => {
+      if (window.innerWidth < 480) {
+        return 12;
+      } else {
+        return 18;
+      }
+    };
     new Chart(ctx, {
       type: 'line',
       data: {
@@ -157,10 +200,10 @@ async function generateWeatherChart() {
             },
             title: {
               display: true,
-              text: 'Date[mm/dd/yyyy]',
+              text: 'Date[dd/mm/yyyy - hour/minutes]',
               color: 'rgb(100, 100, 100)',
               font: {
-                size: 18,
+                size: chartFont(),
               },
             },
           },
@@ -177,7 +220,7 @@ async function generateWeatherChart() {
               text: 'Value of Indicators',
               color: 'rgb(100, 100, 100)',
               font: {
-                size: 18,
+                size: chartFont(),
               },
             },
           },
@@ -186,6 +229,12 @@ async function generateWeatherChart() {
     });
   }
 }
+
+window.addEventListener('resize', () => {
+  myChart.options.scales.x.ticks.font.size = chartFont();
+  myChart.options.scales.y.ticks.font.size = chartFont();
+  myChart.update();
+});
 
 generateWeatherChart();
 
@@ -197,10 +246,10 @@ window.addEventListener('load', function () {
   if (buttonState) {
     if (buttonState === 'visible') {
       chartCanvas.style.display = 'block';
-      toggleButton.innerText = 'Hide Content';
+      toggleButton.innerText = 'Hide Details';
     } else {
       chartCanvas.style.display = 'none';
-      toggleButton.innerText = 'Unhide Content';
+      toggleButton.innerText = 'Show';
     }
   }
 });
@@ -209,11 +258,11 @@ toggleButton.addEventListener('click', function (event) {
   event.preventDefault();
   if (chartCanvas.style.display === 'none') {
     chartCanvas.style.display = 'block';
-    toggleButton.innerText = 'Hide Content';
+    toggleButton.innerText = 'Hide Details';
     localStorage.setItem('buttonState', 'visible');
   } else {
     chartCanvas.style.display = 'none';
-    toggleButton.innerText = 'Unhide Content';
+    toggleButton.innerText = 'Show';
     localStorage.setItem('buttonState', 'hidden');
   }
 });
