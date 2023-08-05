@@ -288,12 +288,13 @@ function activateChartContainer() {
   }
 }
 
+// Aparitia si Disparitia graficului in functie de pagina
+
 var activateButton = document.getElementById('5-days-button');
 activateButton.addEventListener('click', activateChartContainer);
 
 function deactivateChartContainer() {
   var chartContainer = document.querySelector('.chart-container');
-
   if (chartContainer) {
     chartContainer.classList.add('hidden');
     localStorage.setItem('chartContainerDeactivated', 'true');
