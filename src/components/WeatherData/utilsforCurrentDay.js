@@ -1,9 +1,16 @@
 'use strict';
+const APIKEY = '072ec51636e5141423703ba32d12100f';
+
+const urlForCoordinates = city => {
+  return `https://api.openweathermap.org/geo/1.0/direct?q=${city}&appid=${APIKEY}`;
+};
+
+//Functie care stabileste terminatia datei
 function getNumberEnding(number) {
   const lastDigit = number % 10;
 
   if (number >= 11 && number <= 19) {
-    return 'th'; // Excepție pentru numerele între 11 și 19 care se termină în 'th' (e.g., 11th, 12th, 13th)
+    return 'th';
   }
 
   switch (lastDigit) {
@@ -31,6 +38,7 @@ function updateClock() {
   const clock = document.querySelector('.time__hour');
   clock.textContent = getCurrentTime();
 }
+
 const typeOfWeather = {
   cloudy: `<path fill="#eee1dc" style="fill: var(--color4, #eee1dc)" d="M26.888 20.96c-3.317 0-11.015-2.423-14.428-5.445-1.259-1.114-1.897-2.262-1.897-3.411 0-2.55 2.075-4.625 4.625-4.625 0.437 0 0.868 0.061 1.283 0.181 0.626-1.821 2.352-3.114 4.374-3.114 1.671 0 3.199 0.909 4.013 2.325 0.131-0.011 0.262-0.017 0.393-0.017 2.55 0 4.625 2.075 4.625 4.625 0 0.3-0.028 0.596-0.085 0.886 1.349 0.831 2.21 2.324 2.21 3.944 0 1.215-0.489 2.35-1.377 3.194-0.81 0.77-1.923 1.276-3.134 1.424-0.179 0.022-0.38 0.033-0.601 0.033z"></path>
   <path fill="#e0d2cd" style="fill: var(--color5, #e0d2cd)" d="M29.79 12.366c0.056-0.29 0.085-0.586 0.085-0.886 0-2.55-2.075-4.625-4.625-4.625-0.131 0-0.263 0.006-0.393 0.017-0.743-1.292-2.079-2.161-3.576-2.304v15.323c2.204 0.673 4.264 1.070 5.607 1.070 0.22 0 0.421-0.011 0.601-0.033 1.211-0.148 2.324-0.654 3.134-1.424 0.888-0.845 1.377-1.979 1.377-3.194 0-1.619-0.861-3.113-2.21-3.944z"></path>
@@ -333,4 +341,5 @@ export {
   rainNight,
   thunderStorm,
   getNumberEnding,
+  urlForCoordinates,
 };
