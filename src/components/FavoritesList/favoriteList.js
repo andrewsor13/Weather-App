@@ -81,7 +81,7 @@ function removeFromLocalStorage(listItem) {
 }
 
 function checkButtons() {
-  const containerWidth = favouritesList.parentElement.clientWidth;
+  const containerWidth = favouritesList.clientWidth;
   const contentWidth = favouritesList.scrollWidth;
   const scrollLeft = favouritesList.scrollLeft;
 

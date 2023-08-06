@@ -76,7 +76,10 @@ $speed: 0.5s;
   display: inline-block;
   text-decoration: none;
   font-family: 'Open Sans';
-  text-transform: uppercase;
+  text-transform: capitalize;
+  border-radius: 34px;
+  padding-left: 10px;
+  padding-right: 10px;
 
   &:hover {
     cursor: pointer;

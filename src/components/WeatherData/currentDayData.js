@@ -299,5 +299,5 @@ function getCityBackground(cityName) {
     });
   setTimeout(function () {
     hideLoader();
-  }, 2000);
+  }, 500);
 }
