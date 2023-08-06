@@ -284,7 +284,7 @@ function activateChartContainer() {
     localStorage.setItem('chartContainerActivated', 'true');
 
     var toggleButton = document.getElementById('chartButton');
-    toggleButton.innerText = 'Hide Chart';
+    toggleButton.innerText = 'Show Chart';
   }
 }
 
