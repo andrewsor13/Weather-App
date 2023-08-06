@@ -8,6 +8,9 @@ import {
   thunderStorm,
   getNumberEnding,
   urlForCoordinates,
+  formatDate,
+  decodeTime,
+  updateClockWithTimeZone,
 } from './utilsforCurrentDay';
 import {
   snowSvg,
@@ -76,39 +79,14 @@ const weatherData = {
   locationTimezone: '',
 };
 
-//Functie care afla data curenta
-const formatDate = () => {
-  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  const monthNames = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'Octomber',
-    'November',
-    'December',
-  ];
-  const currentDate = new Date();
-  weatherData.currentDayNumber = currentDate.getDate();
-  const currentDayOfWeek = dayNames[currentDate.getDay()];
-  const currentMonth = monthNames[currentDate.getMonth()];
+formatDate(weatherData);
 
-  weatherData.currentDay = currentDayOfWeek;
-  weatherData.currentMonth = currentMonth;
-};
-
-formatDate();
 function startClockUpdate() {
   clockUpdater = setInterval(updateClock, 1000);
 }
 
 function startCityClockUpdate() {
-  cityClockUpdater = setInterval(updateClockWithTimeZone, 1000);
+  cityClockUpdater = setInterval(updateClockWithTimeZone(weatherData), 1000);
 }
 function stopCityClockUpdate() {
   clearInterval(cityClockUpdater);
@@ -196,14 +174,6 @@ function getWeatherForCity() {
     .catch(err => {
       console.error(`Request error: ${err.message}`);
     });
-}
-
-function decodeTime(time) {
-  const date = new Date(time * 1000);
-
-  const hours = String(date.getHours()).padStart(2, '0');
-  const minutes = String(date.getMinutes()).padStart(2, '0');
-  return `${hours}:${minutes}`;
 }
 
 const DayContent = `
@@ -329,60 +299,5 @@ function getCityBackground(cityName) {
     });
   setTimeout(function () {
     hideLoader();
-  }, 2000);
-}
-
-// Funcția care afla ora corespunzătoare fusului orar al orașului căutat
-function updateClockWithTimeZone() {
-  const currentTime = new Date();
-  let localTimeToGMT = weatherData.locationTimezone / 3600;
-  let searchedCityToGMT = weatherData.timezone / 3600;
-  let hours = currentTime.getHours();
-  let timeDifference = 0;
-  if (localTimeToGMT > searchedCityToGMT) {
-    if (localTimeToGMT >= 0) {
-      if (searchedCityToGMT >= 0) {
-        timeDifference = (localTimeToGMT - searchedCityToGMT) * -1;
-      } else if (searchedCityToGMT < 0) {
-        searchedCityToGMT *= -1;
-        timeDifference = (localTimeToGMT + searchedCityToGMT) * -1;
-      }
-    } else if (localTimeToGMT < 0) {
-      if (searchedCityToGMT < 0) {
-        searchedCityToGMT *= -1;
-        localTimeToGMT *= -1;
-        timeDifference = (localTimeToGMT - searchedCityToGMT) * -1;
-      }
-    }
-  } else if (searchedCityToGMT > localTimeToGMT) {
-    if (localTimeToGMT >= 0) {
-      timeDifference = searchedCityToGMT - localTimeToGMT;
-    } else if (localTimeToGMT < 0) {
-      localTimeToGMT *= -1;
-      timeDifference = searchedCityToGMT + localTimeToGMT;
-    }
-  }
-
-  if (timeDifference >= 0) {
-    if (hours + timeDifference >= 24) {
-      hours = timeDifference - (24 - hours);
-    } else {
-      hours += timeDifference;
-    }
-  } else if (timeDifference < 0) {
-    if (hours + timeDifference < 0) {
-      timeDifference *= -1;
-      hours = 24 - (timeDifference - hours);
-    } else {
-      timeDifference *= -1;
-      hours -= timeDifference;
-    }
-  }
-  const formattedHour = String(hours).padStart(2, '0');
-  const formattedMin = String(currentTime.getMinutes()).padStart(2, '0');
-  const formattedSec = String(currentTime.getSeconds()).padStart(2, '0');
-
-  // Actualizăm elementul HTML care afișează ora curentă
-  const clockElement = document.querySelector('.time__hour');
-  clockElement.textContent = `${formattedHour}:${formattedMin}:${formattedSec}`;
+  }, 3000);
 }
