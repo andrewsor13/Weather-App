@@ -5,6 +5,32 @@ const urlForCoordinates = city => {
   return `https://api.openweathermap.org/geo/1.0/direct?q=${city}&appid=${APIKEY}`;
 };
 
+//Functie care afla data curenta
+const formatDate = data => {
+  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const monthNames = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'Octomber',
+    'November',
+    'December',
+  ];
+  const currentDate = new Date();
+  weatherData.currentDayNumber = currentDate.getDate();
+  const currentDayOfWeek = dayNames[currentDate.getDay()];
+  const currentMonth = monthNames[currentDate.getMonth()];
+
+  weatherData.currentDay = currentDayOfWeek;
+  weatherData.currentMonth = currentMonth;
+};
+
 //Functie care stabileste terminatia datei
 function getNumberEnding(number) {
   const lastDigit = number % 10;

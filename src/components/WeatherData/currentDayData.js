@@ -14,7 +14,9 @@ import {
   sunSvg,
   cloudsAndSunSvg,
   cloudySvg,
-} from '../../utilsForFiveDays';
+} from './utilsForFiveDays';
+import { showLoader, hideLoader } from '../Loader/loader';
+import { Notify } from 'notiflix';
 
 const todayData = null;
 const currentTemperature = document.querySelector('.current-temperature');
@@ -30,11 +32,19 @@ const sunDetails = document.querySelector('.sun-details');
 const sunLine = document.querySelector('.line-sun');
 const degreeSymbol = document.querySelector('.degree-symbol');
 const cityText = document.getElementById('city');
-
+const searchForm = document.querySelector('#search-form');
+const searchInput = document.querySelector('#search-input');
+const weatherInfo = document.querySelector('.weather-info__weather');
 let clockUpdater;
 let cityClockUpdater;
 
-const weatherInfo = document.querySelector('.weather-info__weather');
+const baseUrlForTodayWeather =
+  'https://api.openweathermap.org/data/2.5/weather?APPID=072ec51636e5141423703ba32d12100f&units=metric&lang=en&q=';
+const APIKEY = '072ec51636e5141423703ba32d12100f';
+
+const makeUrlForDetectedCityFromCurrentCoord = (latitude, longitude) => {
+  return `https://api.openweathermap.org/geo/1.0/reverse?lat=${latitude}&lon=${longitude}&appid=${APIKEY}`;
+};
 
 const weatherType = document.createElement('div');
 weatherType.innerHTML = `${thunderStorm}`;
@@ -49,13 +59,6 @@ sunriseSvgElement.innerHTML = `<svg class="sun-svg" width="20" height="20" viewB
 
 sunDetails.prepend(sunriseSvgElement);
 sunLine.prepend(sunsetSvgElement);
-const baseUrlForTodayWeather =
-  'https://api.openweathermap.org/data/2.5/weather?APPID=072ec51636e5141423703ba32d12100f&units=metric&lang=en&q=';
-const APIKEY = '072ec51636e5141423703ba32d12100f';
-
-const makeUrlForDetectedCityFromCurrentCoord = (latitude, longitude) => {
-  return `https://api.openweathermap.org/geo/1.0/reverse?lat=${latitude}&lon=${longitude}&appid=${APIKEY}`;
-};
 
 const weatherData = {
   city: 'Bucharest',
@@ -261,10 +264,6 @@ async function getWeatherForSearchedCity() {
 }
 
 getWeather();
-import { Notify } from 'notiflix/build/notiflix-notify-aio';
-
-const searchForm = document.querySelector('#search-form');
-const searchInput = document.querySelector('#search-input');
 
 searchForm.addEventListener('submit', submitForm);
 
@@ -300,8 +299,8 @@ function getCityBackground(cityName) {
   const KEY = '&key=38046505-5b9e748b87046ce765cd21b85';
   const requestParameters = `?image_type=photo&category=travel&orientation=horizontal&q=${cityName}&page=1&per_page=40`;
   const bg = document.querySelector('.backgroundImage');
+  showLoader();
 
-  
   fetch(URL + requestParameters + KEY, {
     method: 'GET',
   })
@@ -328,6 +327,9 @@ function getCityBackground(cityName) {
     .catch(error => {
       console.error('Error fetching background:', error);
     });
+  setTimeout(function () {
+    hideLoader();
+  }, 2000);
 }
 
 // Funcția care afla ora corespunzătoare fusului orar al orașului căutat

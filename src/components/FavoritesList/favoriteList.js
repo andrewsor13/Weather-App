@@ -1,5 +1,5 @@
-import { Notify } from 'notiflix/build/notiflix-notify-aio';
-import { submitForm } from './components/WeatherData/currentDayData.js';
+import { Notify } from 'notiflix';
+import { submitForm } from '../WeatherData/currentDayData';
 
 const favoriteCity = document.querySelector('.search-form__favourite');
 const searchCity = document.querySelector('#search-input');

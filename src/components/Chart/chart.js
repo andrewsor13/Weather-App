@@ -252,10 +252,10 @@ window.addEventListener('load', function () {
 
   if (chartState === 'true') {
     chartCanvas.style.display = 'block';
-    toggleButton.innerText = 'Hide Details';
+    toggleButton.innerText = 'Hide Chart';
   } else {
     chartCanvas.style.display = 'none';
-    toggleButton.innerText = 'Show';
+    toggleButton.innerText = 'Show Chart';
   }
 });
 
@@ -263,11 +263,11 @@ toggleButton.addEventListener('click', function (event) {
   event.preventDefault();
   if (chartCanvas.style.display === 'none') {
     chartCanvas.style.display = 'block';
-    toggleButton.innerText = 'Hide Details';
+    toggleButton.innerText = 'Hide Chart';
     localStorage.setItem('chartContainerActivated', 'true');
   } else {
     chartCanvas.style.display = 'none';
-    toggleButton.innerText = 'Show';
+    toggleButton.innerText = 'Show Chart';
     localStorage.setItem('chartContainerActivated', 'false');
   }
 });
@@ -284,7 +284,7 @@ function activateChartContainer() {
     localStorage.setItem('chartContainerActivated', 'true');
 
     var toggleButton = document.getElementById('chartButton');
-    toggleButton.innerText = 'Hide Details';
+    toggleButton.innerText = 'Hide Chart';
   }
 }
 
