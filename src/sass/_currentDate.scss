@@ -1,5 +1,4 @@
 $current-text-color: #102136;
-
 .current-date-container {
   display: flex;
   justify-content: center;
@@ -96,6 +95,7 @@ $current-text-color: #102136;
     height: 28px;
     border: none;
     opacity: 50%;
+    transition: box-shadow 0.3s ease;
   }
 
   button:hover {
@@ -160,6 +160,13 @@ $current-text-color: #102136;
 @media screen and (min-width: 1280px) {
   .current-date-container {
     margin-top: 0px;
+    margin-bottom: 0px;
+    transition: all 0.3s ease-out;
+    &:hover {
+      -webkit-box-shadow: -2px 9px 15px 4px rgba(255, 255, 255, 1);
+      -moz-box-shadow: -2px 9px 15px 4px rgba(255, 255, 255, 1);
+      box-shadow: -2px 9px 15px 4px rgba(255, 255, 255, 1);
+    }
     .date-info {
       width: 624px;
       height: 264px;

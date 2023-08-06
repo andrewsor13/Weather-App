@@ -5,6 +5,32 @@ const urlForCoordinates = city => {
   return `https://api.openweathermap.org/geo/1.0/direct?q=${city}&appid=${APIKEY}`;
 };
 
+//Functie care afla data curenta
+const formatDate = data => {
+  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const monthNames = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'Octomber',
+    'November',
+    'December',
+  ];
+  const currentDate = new Date();
+  data.currentDayNumber = currentDate.getDate();
+  const currentDayOfWeek = dayNames[currentDate.getDay()];
+  const currentMonth = monthNames[currentDate.getMonth()];
+
+  data.currentDay = currentDayOfWeek;
+  data.currentMonth = currentMonth;
+};
+
 //Functie care stabileste terminatia datei
 function getNumberEnding(number) {
   const lastDigit = number % 10;
@@ -34,9 +60,72 @@ function getCurrentTime() {
   return `${hours}:${minutes}:${seconds}`;
 }
 
+function decodeTime(time) {
+  const date = new Date(time * 1000);
+
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  return `${hours}:${minutes}`;
+}
+
 function updateClock() {
   const clock = document.querySelector('.time__hour');
   clock.textContent = getCurrentTime();
+}
+
+// Funcția care afla ora corespunzătoare fusului orar al orașului căutat
+function updateClockWithTimeZone(data) {
+  const currentTime = new Date();
+  let localTimeToGMT = data.locationTimezone / 3600;
+  let searchedCityToGMT = data.timezone / 3600;
+  let hours = currentTime.getHours();
+  let timeDifference = 0;
+  if (localTimeToGMT > searchedCityToGMT) {
+    if (localTimeToGMT >= 0) {
+      if (searchedCityToGMT >= 0) {
+        timeDifference = (localTimeToGMT - searchedCityToGMT) * -1;
+      } else if (searchedCityToGMT < 0) {
+        searchedCityToGMT *= -1;
+        timeDifference = (localTimeToGMT + searchedCityToGMT) * -1;
+      }
+    } else if (localTimeToGMT < 0) {
+      if (searchedCityToGMT < 0) {
+        searchedCityToGMT *= -1;
+        localTimeToGMT *= -1;
+        timeDifference = (localTimeToGMT - searchedCityToGMT) * -1;
+      }
+    }
+  } else if (searchedCityToGMT > localTimeToGMT) {
+    if (localTimeToGMT >= 0) {
+      timeDifference = searchedCityToGMT - localTimeToGMT;
+    } else if (localTimeToGMT < 0) {
+      localTimeToGMT *= -1;
+      timeDifference = searchedCityToGMT + localTimeToGMT;
+    }
+  }
+
+  if (timeDifference >= 0) {
+    if (hours + timeDifference >= 24) {
+      hours = timeDifference - (24 - hours);
+    } else {
+      hours += timeDifference;
+    }
+  } else if (timeDifference < 0) {
+    if (hours + timeDifference < 0) {
+      timeDifference *= -1;
+      hours = 24 - (timeDifference - hours);
+    } else {
+      timeDifference *= -1;
+      hours -= timeDifference;
+    }
+  }
+  const formattedHour = String(hours).padStart(2, '0');
+  const formattedMin = String(currentTime.getMinutes()).padStart(2, '0');
+  const formattedSec = String(currentTime.getSeconds()).padStart(2, '0');
+
+  // Actualizăm elementul HTML care afișează ora curentă
+  const clockElement = document.querySelector('.time__hour');
+  clockElement.textContent = `${formattedHour}:${formattedMin}:${formattedSec}`;
 }
 
 const typeOfWeather = {
@@ -342,4 +431,7 @@ export {
   thunderStorm,
   getNumberEnding,
   urlForCoordinates,
+  formatDate,
+  decodeTime,
+  updateClockWithTimeZone,
 };

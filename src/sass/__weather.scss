@@ -132,7 +132,7 @@
       &__weather {
         display: flex;
         p {
-          font-size: $font-size-18;         
+          font-size: $font-size-18;
         }
       }
 
@@ -210,6 +210,12 @@
     .weather-info {
       width: 411px;
       height: 289px;
+      transition: all 0.3s ease-out;
+      &:hover {
+        -webkit-box-shadow: -2px 9px 50px 4px rgba(255, 255, 255, 0.3);
+        -moz-box-shadow: -2px 9px 50px 4px rgba(255, 255, 255, 0.3);
+        box-shadow: -2px 9px 50px 4px rgba(255, 255, 255, 0.3);
+      }
     }
   }
 

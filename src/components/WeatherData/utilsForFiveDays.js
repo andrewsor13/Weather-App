@@ -228,6 +228,8 @@ const windSvg = `<path d="M25.316 2.643c-1.516 0-3.002 0.523-4.185 1.472-0.404 0
 <path d="M12.25 22.563c0-0.518-0.42-0.938-0.938-0.938h-5.625c-0.518 0-0.938 0.42-0.938 0.938s0.42 0.938 0.938 0.938h5.625c0.518 0 0.938-0.42 0.938-0.938z"></path>
 `;
 
+const clearDay = '';
+
 //array care stocheaza valorile pentru icons de pe server pentru a randa icons in functie de raspuns
 const iconMapping = {
   '01d': sunSvg,

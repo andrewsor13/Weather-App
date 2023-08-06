@@ -8,13 +8,18 @@ import {
   thunderStorm,
   getNumberEnding,
   urlForCoordinates,
+  formatDate,
+  decodeTime,
+  updateClockWithTimeZone,
 } from './utilsforCurrentDay';
 import {
   snowSvg,
   sunSvg,
   cloudsAndSunSvg,
   cloudySvg,
-} from '../../utilsForFiveDays';
+} from './utilsForFiveDays';
+import { showLoader, hideLoader } from '../Loader/loader';
+import { Notify } from 'notiflix';
 
 const todayData = null;
 const currentTemperature = document.querySelector('.current-temperature');
@@ -30,11 +35,19 @@ const sunDetails = document.querySelector('.sun-details');
 const sunLine = document.querySelector('.line-sun');
 const degreeSymbol = document.querySelector('.degree-symbol');
 const cityText = document.getElementById('city');
-
+const searchForm = document.querySelector('#search-form');
+const searchInput = document.querySelector('#search-input');
+const weatherInfo = document.querySelector('.weather-info__weather');
 let clockUpdater;
 let cityClockUpdater;
 
-const weatherInfo = document.querySelector('.weather-info__weather');
+const baseUrlForTodayWeather =
+  'https://api.openweathermap.org/data/2.5/weather?APPID=072ec51636e5141423703ba32d12100f&units=metric&lang=en&q=';
+const APIKEY = '072ec51636e5141423703ba32d12100f';
+
+const makeUrlForDetectedCityFromCurrentCoord = (latitude, longitude) => {
+  return `https://api.openweathermap.org/geo/1.0/reverse?lat=${latitude}&lon=${longitude}&appid=${APIKEY}`;
+};
 
 const weatherType = document.createElement('div');
 weatherType.innerHTML = `${thunderStorm}`;
@@ -49,13 +62,6 @@ sunriseSvgElement.innerHTML = `<svg class="sun-svg" width="20" height="20" viewB
 
 sunDetails.prepend(sunriseSvgElement);
 sunLine.prepend(sunsetSvgElement);
-const baseUrlForTodayWeather =
-  'https://api.openweathermap.org/data/2.5/weather?APPID=072ec51636e5141423703ba32d12100f&units=metric&lang=en&q=';
-const APIKEY = '072ec51636e5141423703ba32d12100f';
-
-const makeUrlForDetectedCityFromCurrentCoord = (latitude, longitude) => {
-  return `https://api.openweathermap.org/geo/1.0/reverse?lat=${latitude}&lon=${longitude}&appid=${APIKEY}`;
-};
 
 const weatherData = {
   city: 'Bucharest',
@@ -73,39 +79,14 @@ const weatherData = {
   locationTimezone: '',
 };
 
-//Functie care afla data curenta
-const formatDate = () => {
-  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  const monthNames = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'Octomber',
-    'November',
-    'December',
-  ];
-  const currentDate = new Date();
-  weatherData.currentDayNumber = currentDate.getDate();
-  const currentDayOfWeek = dayNames[currentDate.getDay()];
-  const currentMonth = monthNames[currentDate.getMonth()];
+formatDate(weatherData);
 
-  weatherData.currentDay = currentDayOfWeek;
-  weatherData.currentMonth = currentMonth;
-};
-
-formatDate();
 function startClockUpdate() {
   clockUpdater = setInterval(updateClock, 1000);
 }
 
 function startCityClockUpdate() {
-  cityClockUpdater = setInterval(updateClockWithTimeZone, 1000);
+  cityClockUpdater = setInterval(updateClockWithTimeZone(weatherData), 1000);
 }
 function stopCityClockUpdate() {
   clearInterval(cityClockUpdater);
@@ -195,14 +176,6 @@ function getWeatherForCity() {
     });
 }
 
-function decodeTime(time) {
-  const date = new Date(time * 1000);
-
-  const hours = String(date.getHours()).padStart(2, '0');
-  const minutes = String(date.getMinutes()).padStart(2, '0');
-  return `${hours}:${minutes}`;
-}
-
 const DayContent = `
 <h3>${weatherData.currentDayNumber}<sup class="exponent">${getNumberEnding(
   weatherData.currentDayNumber
@@ -261,10 +234,6 @@ async function getWeatherForSearchedCity() {
 }
 
 getWeather();
-import { Notify } from 'notiflix/build/notiflix-notify-aio';
-
-const searchForm = document.querySelector('#search-form');
-const searchInput = document.querySelector('#search-input');
 
 searchForm.addEventListener('submit', submitForm);
 
@@ -300,8 +269,8 @@ function getCityBackground(cityName) {
   const KEY = '&key=38046505-5b9e748b87046ce765cd21b85';
   const requestParameters = `?image_type=photo&category=travel&orientation=horizontal&q=${cityName}&page=1&per_page=40`;
   const bg = document.querySelector('.backgroundImage');
+  showLoader();
 
-  
   fetch(URL + requestParameters + KEY, {
     method: 'GET',
   })
@@ -328,59 +297,7 @@ function getCityBackground(cityName) {
     .catch(error => {
       console.error('Error fetching background:', error);
     });
-}
-
-// Funcția care afla ora corespunzătoare fusului orar al orașului căutat
-function updateClockWithTimeZone() {
-  const currentTime = new Date();
-  let localTimeToGMT = weatherData.locationTimezone / 3600;
-  let searchedCityToGMT = weatherData.timezone / 3600;
-  let hours = currentTime.getHours();
-  let timeDifference = 0;
-  if (localTimeToGMT > searchedCityToGMT) {
-    if (localTimeToGMT >= 0) {
-      if (searchedCityToGMT >= 0) {
-        timeDifference = (localTimeToGMT - searchedCityToGMT) * -1;
-      } else if (searchedCityToGMT < 0) {
-        searchedCityToGMT *= -1;
-        timeDifference = (localTimeToGMT + searchedCityToGMT) * -1;
-      }
-    } else if (localTimeToGMT < 0) {
-      if (searchedCityToGMT < 0) {
-        searchedCityToGMT *= -1;
-        localTimeToGMT *= -1;
-        timeDifference = (localTimeToGMT - searchedCityToGMT) * -1;
-      }
-    }
-  } else if (searchedCityToGMT > localTimeToGMT) {
-    if (localTimeToGMT >= 0) {
-      timeDifference = searchedCityToGMT - localTimeToGMT;
-    } else if (localTimeToGMT < 0) {
-      localTimeToGMT *= -1;
-      timeDifference = searchedCityToGMT + localTimeToGMT;
-    }
-  }
-
-  if (timeDifference >= 0) {
-    if (hours + timeDifference >= 24) {
-      hours = timeDifference - (24 - hours);
-    } else {
-      hours += timeDifference;
-    }
-  } else if (timeDifference < 0) {
-    if (hours + timeDifference < 0) {
-      timeDifference *= -1;
-      hours = 24 - (timeDifference - hours);
-    } else {
-      timeDifference *= -1;
-      hours -= timeDifference;
-    }
-  }
-  const formattedHour = String(hours).padStart(2, '0');
-  const formattedMin = String(currentTime.getMinutes()).padStart(2, '0');
-  const formattedSec = String(currentTime.getSeconds()).padStart(2, '0');
-
-  // Actualizăm elementul HTML care afișează ora curentă
-  const clockElement = document.querySelector('.time__hour');
-  clockElement.textContent = `${formattedHour}:${formattedMin}:${formattedSec}`;
+  setTimeout(function () {
+    hideLoader();
+  }, 3000);
 }

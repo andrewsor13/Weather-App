@@ -1,8 +1,7 @@
 import { gsap } from 'gsap';
-import "./quotes";
-import "./background";
-import "./favoriteList";
- 
+import './components/Quotes/quotes';
+import './components/Background/background';
+import './components/FavoritesList/favoriteList';
 
 function animateSquares() {
   const cubeFirst = document.querySelector('.cube-first');
@@ -20,7 +19,7 @@ function animateSquares() {
   gsap.to(cubeSecond, {
     duration: 30,
     x: -1000,
-    y: 1000,
+    y: 800,
     rotate: 400,
     repeat: -1,
     yoyo: true,
@@ -28,5 +27,3 @@ function animateSquares() {
 }
 
 animateSquares();
-
-
