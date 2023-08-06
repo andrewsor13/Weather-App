@@ -1,2 +1,2 @@
 const t=document.querySelector(".days-cards"),e=document.querySelector(".left"),r=document.querySelector(".right"),n=document.querySelector(".more-info-container");r.addEventListener("click",(function(){t.style.transform="translateX(-41%)",n.style.transform="translateX(-29%)"})),e.addEventListener("click",(function(){t.style.transform="translateX(0%)",n.style.transform="translateX(0%)"}));
-//# sourceMappingURL=index.6d5a2121.js.map
+//# sourceMappingURL=index.4068c8f5.js.map
